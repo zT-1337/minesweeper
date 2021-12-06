@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { generateEmptyField, generateFieldWithMines } from '../../game/minesweeper'
+import { clickCell, generateEmptyField, generateFieldWithMines } from '../../game/minesweeper'
 import { FieldContainer } from '../GameField/FieldContainer'
 
 export function GameContainer () {
@@ -21,7 +21,7 @@ export function GameContainer () {
   }
 
   const onCellLeftClick = (index: number) => {
-
+    setField(clickCell(field, index))
   }
 
   return (

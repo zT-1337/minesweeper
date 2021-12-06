@@ -52,6 +52,23 @@ export function generateFieldWithMines (request: GenerateFieldWithMinesRequest):
   }
 }
 
+export function clickCell (field: Field, index: number): Field {
+  if (field.cells[index].clickState !== 'unclicked') {
+    return field
+  }
+
+  const copiedCells = field.cells.map((cell: Cell) => Object.assign({}, cell))
+  const clickedCell = copiedCells[index]
+  clickedCell.clickState = 'clicked'
+
+  return {
+    cells: copiedCells,
+    width: field.width,
+    height: field.height,
+    isLost: field.isLost
+  }
+}
+
 function countMineNeighbours (index: number, minePositions: Map<number, boolean>, width: number, height: number): number {
   let counter = 0
 
@@ -91,7 +108,7 @@ function countMineNeighbours (index: number, minePositions: Map<number, boolean>
 }
 
 function hasLeftNeighbour (index: number, width: number): boolean {
-  return index % width === 0
+  return index % width !== 0
 }
 
 function getLeftNeighbourPosition (index: number): number {
@@ -99,7 +116,7 @@ function getLeftNeighbourPosition (index: number): number {
 }
 
 function hasRightNeighbour (index: number, width: number): boolean {
-  return index % width === width - 1
+  return index % width !== width - 1
 }
 
 function getRightNeighbourPosition (index: number): number {
