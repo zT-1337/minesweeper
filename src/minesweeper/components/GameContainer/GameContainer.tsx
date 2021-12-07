@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { clickCell, generateEmptyField, generateFieldWithMines } from '../../game/minesweeper'
+import { clickCell, generateEmptyField, generateFieldWithMines, markCell } from '../../game/minesweeper'
 import { FieldContainer } from '../GameField/FieldContainer'
 
 export function GameContainer () {
@@ -27,7 +27,7 @@ export function GameContainer () {
   const onCellRightClick = (index: number) => {
     if (!isGenerated) return
 
-    console.log('on right click')
+    setField(markCell(field, index))
   }
 
   return (

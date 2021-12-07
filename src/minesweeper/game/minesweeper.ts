@@ -18,7 +18,8 @@ export function generateEmptyField (request: GenerateEmptyFieldRequest): Field {
     cells: cells,
     width: request.width,
     height: request.height,
-    isLost: false
+    mineCount: 0,
+    flaggedCounter: 0
   }
 }
 
@@ -48,7 +49,8 @@ export function generateFieldWithMines (request: GenerateFieldWithMinesRequest):
     cells: cells,
     width: request.width,
     height: request.height,
-    isLost: false
+    mineCount: request.mineCount,
+    flaggedCounter: 0
   }
 }
 
@@ -57,7 +59,7 @@ export function clickCell (field: Field, index: number): Field {
     return field
   }
 
-  const copiedCells = field.cells.map((cell: Cell) => Object.assign({}, cell))
+  const copiedCells = copyCells(field.cells)
   const clickedCell = copiedCells[index]
   clickedCell.clickState = 'clicked'
 
@@ -65,8 +67,33 @@ export function clickCell (field: Field, index: number): Field {
     cells: copiedCells,
     width: field.width,
     height: field.height,
-    isLost: field.isLost
+    mineCount: field.mineCount,
+    flaggedCounter: field.flaggedCounter
   }
+}
+
+export function markCell (field: Field, index: number): Field {
+  if (field.cells[index].clickState === 'clicked') {
+    return field
+  }
+
+  const copiedCells = copyCells(field.cells)
+  const markedCell = copiedCells[index]
+  const wasUnmarked = markedCell.clickState === 'unclicked'
+
+  markedCell.clickState = wasUnmarked ? 'marked' : 'unclicked'
+
+  return {
+    cells: copiedCells,
+    width: field.width,
+    height: field.height,
+    mineCount: field.mineCount,
+    flaggedCounter: wasUnmarked ? field.flaggedCounter + 1 : field.flaggedCounter - 1
+  }
+}
+
+function copyCells (cells: Cell[]): Cell[] {
+  return cells.map((cell: Cell) => Object.assign({}, cell))
 }
 
 function countMineNeighbours (index: number, minePositions: Map<number, boolean>, width: number, height: number): number {

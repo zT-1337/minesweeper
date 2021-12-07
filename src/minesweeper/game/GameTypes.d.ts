@@ -9,7 +9,8 @@ export type Field = {
   cells: Cell[],
   width: number,
   height: number,
-  isLost: boolean
+  mineCount: number,
+  flaggedCounter: number,
 }
 
 export type GenerateEmptyFieldRequest = {
