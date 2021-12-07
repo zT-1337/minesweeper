@@ -78,7 +78,16 @@ export function clickCell (field: Field, index: number): Field {
 function clickCellWithoutCopying (field: Field, index: number): void {
   if (field.cells[index].clickState !== 'unclicked') return
 
-  
+  const clickedCell = field.cells[index]
+  clickedCell.clickState = 'clicked'
+
+  if (clickedCell.mineNeighbourCounter !== 0) return
+
+  const neighbours = getNeighbours(field, index)
+
+  for (const neighbour of neighbours) {
+    clickCellWithoutCopying(field, neighbour.index)
+  }
 }
 
 export function markCell (field: Field, index: number): Field {
@@ -142,6 +151,44 @@ function countMineNeighbours (index: number, minePositions: Map<number, boolean>
   }
 
   return counter
+}
+
+function getNeighbours (field: Field, index: number): Cell[] {
+  const result: Cell[] = []
+
+  if (hasLeftNeighbour(index, field.width)) {
+    result.push(field.cells[getLeftNeighbourPosition(index)])
+  }
+
+  if (hasRightNeighbour(index, field.width)) {
+    result.push(field.cells[getRightNeighbourPosition(index)])
+  }
+
+  if (hasBottomNeighbour(index, field.width, field.height)) {
+    result.push(field.cells[getBottomNeighbourPosition(index, field.width)])
+  }
+
+  if (hasTopNeighbour(index, field.width)) {
+    result.push(field.cells[getTopNeighbourPosition(index, field.width)])
+  }
+
+  if (hasBottomLeftNeighbour(index, field.width, field.height)) {
+    result.push(field.cells[getBottomLeftNeighbourPosition(index, field.width)])
+  }
+
+  if (hasBottomRightNeighbour(index, field.width, field.height)) {
+    result.push(field.cells[getBottomRightNeighbourPosition(index, field.width)])
+  }
+
+  if (hasTopLeftNeighbour(index, field.width)) {
+    result.push(field.cells[getTopLeftNeighbourPosition(index, field.width)])
+  }
+
+  if (hasTopRightNeighbour(index, field.width)) {
+    result.push(field.cells[getTopRightNeighbourPosition(index, field.width)])
+  }
+
+  return result
 }
 
 function hasLeftNeighbour (index: number, width: number): boolean {

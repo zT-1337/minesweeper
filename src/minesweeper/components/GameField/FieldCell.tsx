@@ -30,7 +30,7 @@ export function FieldCell (props: FieldCellPropType) {
         content = <span>B</span>
       } else {
         style = clickedNotMineStyle
-        content = <span>{props.cell.mineNeighbourCounter}</span>
+        content = <span>{props.cell.mineNeighbourCounter !== 0 && props.cell.mineNeighbourCounter}</span>
       }
     }
   }

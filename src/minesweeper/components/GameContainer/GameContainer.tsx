@@ -13,7 +13,7 @@ export function GameContainer () {
     setField(generateFieldWithMines({
       width: 32,
       height: 17,
-      mineCount: 170,
+      mineCount: 30,
       clickedCellIndex: index
     }))
 
