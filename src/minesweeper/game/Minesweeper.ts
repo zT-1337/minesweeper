@@ -40,20 +40,20 @@ export function generateFieldWithMines (request: GenerateFieldWithMinesRequest):
   for (let i = 0; i < cellCount; ++i) {
     cells[i] = {
       index: i,
-      clickState: i === request.clickedCellIndex ? 'clicked' : 'unclicked',
+      clickState: 'unclicked',
       isMine: minePositions.get(i) === true,
       mineNeighbourCounter: countMineNeighbours(i, minePositions, request.width, request.height)
     }
   }
 
-  return {
+  return clickCell({
     cells: cells,
     width: request.width,
     height: request.height,
     mineCount: request.mineCount,
     flaggedCounter: 0,
     winningStatus: 'ongoing'
-  }
+  }, request.clickedCellIndex)
 }
 
 export function clickCell (field: Field, index: number): Field {
@@ -61,18 +61,24 @@ export function clickCell (field: Field, index: number): Field {
     return field
   }
 
-  const copiedCells = copyCells(field.cells)
-  const clickedCell = copiedCells[index]
-  clickedCell.clickState = 'clicked'
-
-  return {
-    cells: copiedCells,
+  const copiedField = {
+    cells: copyCells(field.cells),
     width: field.width,
     height: field.height,
     mineCount: field.mineCount,
     flaggedCounter: field.flaggedCounter,
-    winningStatus: clickedCell.isMine ? 'lost' : 'ongoing'
+    winningStatus: field.winningStatus
   }
+
+  clickCellWithoutCopying(copiedField, index)
+
+  return copiedField
+}
+
+function clickCellWithoutCopying (field: Field, index: number): void {
+  if (field.cells[index].clickState !== 'unclicked') return
+
+  
 }
 
 export function markCell (field: Field, index: number): Field {

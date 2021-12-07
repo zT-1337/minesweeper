@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { clickCell, generateEmptyField, generateFieldWithMines, markCell } from '../../game/minesweeper'
+import { clickCell, generateEmptyField, generateFieldWithMines, markCell } from '../../game/Minesweeper'
 import { FieldContainer } from '../GameField/FieldContainer'
 
 export function GameContainer () {
