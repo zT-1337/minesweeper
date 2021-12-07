@@ -12,7 +12,7 @@ export type Field = {
   width: number,
   height: number,
   mineCount: number,
-  flaggedCounter: number,
+  markedCounter: number,
   winningStatus: WinningStatus
 }
 

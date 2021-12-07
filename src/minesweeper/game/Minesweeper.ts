@@ -19,7 +19,7 @@ export function generateEmptyField (request: GenerateEmptyFieldRequest): Field {
     width: request.width,
     height: request.height,
     mineCount: 0,
-    flaggedCounter: 0,
+    markedCounter: 0,
     winningStatus: 'ongoing'
   }
 }
@@ -51,7 +51,7 @@ export function generateFieldWithMines (request: GenerateFieldWithMinesRequest):
     width: request.width,
     height: request.height,
     mineCount: request.mineCount,
-    flaggedCounter: 0,
+    markedCounter: 0,
     winningStatus: 'ongoing'
   }, request.clickedCellIndex)
 }
@@ -61,12 +61,12 @@ export function clickCell (field: Field, index: number): Field {
     return field
   }
 
-  const copiedField = {
+  const copiedField: Field = {
     cells: copyCells(field.cells),
     width: field.width,
     height: field.height,
     mineCount: field.mineCount,
-    flaggedCounter: field.flaggedCounter,
+    markedCounter: field.markedCounter,
     winningStatus: field.winningStatus
   }
 
@@ -81,7 +81,7 @@ function clickCellWithoutCopying (field: Field, index: number): void {
   const clickedCell = field.cells[index]
   clickedCell.clickState = 'clicked'
 
-  if (clickedCell.mineNeighbourCounter !== 0) return
+  if (clickedCell.mineNeighbourCounter !== 0 || clickedCell.isMine) return
 
   const neighbours = getNeighbours(field, index)
 
@@ -106,7 +106,7 @@ export function markCell (field: Field, index: number): Field {
     width: field.width,
     height: field.height,
     mineCount: field.mineCount,
-    flaggedCounter: wasUnmarked ? field.flaggedCounter + 1 : field.flaggedCounter - 1,
+    markedCounter: wasUnmarked ? field.markedCounter + 1 : field.markedCounter - 1,
     winningStatus: 'ongoing'
   }
 }
