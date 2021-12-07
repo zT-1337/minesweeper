@@ -81,7 +81,12 @@ function clickCellWithoutCopying (field: Field, index: number): void {
   const clickedCell = field.cells[index]
   clickedCell.clickState = 'clicked'
 
-  if (clickedCell.mineNeighbourCounter !== 0 || clickedCell.isMine) return
+  if (clickedCell.isMine) {
+    field.winningStatus = 'lost'
+    return
+  }
+
+  if (clickedCell.mineNeighbourCounter !== 0) return
 
   const neighbours = getNeighbours(field, index)
 
