@@ -3,8 +3,9 @@ import { Field } from '../../game/GameTypes'
 import { FieldCell } from './FieldCell'
 
 export type FieldContainerPropType = {
-  field: Field,
+  field: Field
   onCellLeftClick(index: number): void
+  onCellRightClick(index: number): void
 }
 
 export function FieldContainer (props: FieldContainerPropType) {
@@ -16,6 +17,7 @@ export function FieldContainer (props: FieldContainerPropType) {
         <FieldCell
           key={`fieldCell-${cell.index}`} cell={cell}
           onLeftClick={props.onCellLeftClick}
+          onRightClick={props.onCellRightClick}
         />
       )}
     </div>

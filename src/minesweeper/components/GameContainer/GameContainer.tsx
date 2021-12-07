@@ -24,7 +24,17 @@ export function GameContainer () {
     setField(clickCell(field, index))
   }
 
+  const onCellRightClick = (index: number) => {
+    if (!isGenerated) return
+
+    console.log('on right click')
+  }
+
   return (
-    <FieldContainer field={field} onCellLeftClick={isGenerated ? onCellLeftClick : onFirstCellLeftClick}/>
+    <FieldContainer
+      field={field}
+      onCellLeftClick={isGenerated ? onCellLeftClick : onFirstCellLeftClick}
+      onCellRightClick={onCellRightClick}
+    />
   )
 }

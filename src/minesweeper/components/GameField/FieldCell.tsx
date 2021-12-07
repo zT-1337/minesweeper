@@ -2,37 +2,53 @@ import React, { CSSProperties, MouseEvent } from 'react'
 import { Cell } from '../../game/GameTypes'
 
 export type FieldCellPropType = {
-  cell: Cell,
+  cell: Cell
   onLeftClick(index: number): void
+  onRightClick(index: number): void
 }
 
 export function FieldCell (props: FieldCellPropType) {
-  if (props.cell.clickState === 'unclicked') {
-    return <Unclicked onLeftClick={props.onLeftClick} index={props.cell.index}/>
+  let style = unclickedStyle
+  let content = <span></span>
+
+  switch (props.cell.clickState) {
+    case 'unclicked': {
+      style = unclickedStyle
+      content = <span></span>
+      break
+    }
+
+    case 'marked': {
+      style = markedStyle
+      content = <span>F</span>
+      break
+    }
+
+    case 'clicked': {
+      if (props.cell.isMine) {
+        style = clickedMineStyle
+        content = <span>B</span>
+      } else {
+        style = clickedNotMineStyle
+        content = <span>{props.cell.mineNeighbourCounter}</span>
+      }
+    }
   }
 
-  if (props.cell.clickState === 'marked') {
-    return <Marked />
-  }
-
-  if (props.cell.clickState === 'clicked' && props.cell.isMine) {
-    return <ClickedMine/>
-  }
-
-  return <ClickedNotMine mineNeighbourCounter={props.cell.mineNeighbourCounter}/>
-}
-
-type UnclickedPropType = {
-  index: number,
-  onLeftClick(index: number): void
-}
-
-function Unclicked (props: UnclickedPropType) {
   const onLeftClick = (event: MouseEvent<HTMLDivElement>) => {
-    props.onLeftClick(props.index)
+    props.onLeftClick(props.cell.index)
   }
 
-  return <div style={unclickedStyle} onClick={onLeftClick}/>
+  const onRightClick = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    props.onRightClick(props.cell.index)
+  }
+
+  return (
+    <div style={style} onClick={onLeftClick} onContextMenu={onRightClick}>
+      {content}
+    </div>
+  )
 }
 
 const unclickedStyle: CSSProperties = {
@@ -42,28 +58,18 @@ const unclickedStyle: CSSProperties = {
   height: '100%'
 }
 
-function Marked () {
-  return (
-    <div className={'fieldCell marked'}>
-      <span>F</span>
-    </div>
-  )
+const markedStyle: CSSProperties = {
+  backgroundColor: 'gray',
+  border: '1px solid black',
+  width: '100%',
+  height: '100%'
 }
 
-function ClickedMine () {
-  return (
-    <div className={'fieldCell clickedMine'}>
-      <span>M</span>
-    </div>
-  )
-}
-
-function ClickedNotMine (props: {mineNeighbourCounter: number}) {
-  return (
-    <div style={clickedNotMineStyle}>
-      <span>{props.mineNeighbourCounter}</span>
-    </div>
-  )
+const clickedMineStyle: CSSProperties = {
+  backgroundColor: 'red',
+  border: '1px solid black',
+  width: '100%',
+  height: '100%'
 }
 
 const clickedNotMineStyle: CSSProperties = {
