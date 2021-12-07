@@ -5,12 +5,15 @@ export type Cell = {
   mineNeighbourCounter: number
 }
 
+export type WinningStatus = 'won' | 'lost' | 'ongoing'
+
 export type Field = {
   cells: Cell[],
   width: number,
   height: number,
   mineCount: number,
   flaggedCounter: number,
+  winningStatus: WinningStatus
 }
 
 export type GenerateEmptyFieldRequest = {

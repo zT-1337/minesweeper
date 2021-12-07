@@ -21,11 +21,13 @@ export function GameContainer () {
   }
 
   const onCellLeftClick = (index: number) => {
+    if (field.winningStatus === 'lost') return
+
     setField(clickCell(field, index))
   }
 
   const onCellRightClick = (index: number) => {
-    if (!isGenerated) return
+    if (!isGenerated || field.winningStatus === 'lost') return
 
     setField(markCell(field, index))
   }

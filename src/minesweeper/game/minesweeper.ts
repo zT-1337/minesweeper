@@ -19,7 +19,8 @@ export function generateEmptyField (request: GenerateEmptyFieldRequest): Field {
     width: request.width,
     height: request.height,
     mineCount: 0,
-    flaggedCounter: 0
+    flaggedCounter: 0,
+    winningStatus: 'ongoing'
   }
 }
 
@@ -50,7 +51,8 @@ export function generateFieldWithMines (request: GenerateFieldWithMinesRequest):
     width: request.width,
     height: request.height,
     mineCount: request.mineCount,
-    flaggedCounter: 0
+    flaggedCounter: 0,
+    winningStatus: 'ongoing'
   }
 }
 
@@ -68,7 +70,8 @@ export function clickCell (field: Field, index: number): Field {
     width: field.width,
     height: field.height,
     mineCount: field.mineCount,
-    flaggedCounter: field.flaggedCounter
+    flaggedCounter: field.flaggedCounter,
+    winningStatus: clickedCell.isMine ? 'lost' : 'ongoing'
   }
 }
 
@@ -88,7 +91,8 @@ export function markCell (field: Field, index: number): Field {
     width: field.width,
     height: field.height,
     mineCount: field.mineCount,
-    flaggedCounter: wasUnmarked ? field.flaggedCounter + 1 : field.flaggedCounter - 1
+    flaggedCounter: wasUnmarked ? field.flaggedCounter + 1 : field.flaggedCounter - 1,
+    winningStatus: 'ongoing'
   }
 }
 
