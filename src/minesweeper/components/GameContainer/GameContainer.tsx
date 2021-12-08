@@ -2,13 +2,19 @@ import React, { useRef, useState } from 'react'
 import { Field } from '../../game/GameTypes'
 import { clickCell, generateEmptyField, generateFieldWithMines, markCell } from '../../game/Minesweeper'
 import { FieldContainer } from '../GameField/FieldContainer'
+import { GameFooter } from '../GameFooter/GameFooter'
 import { GameHeader } from '../GameHeader/GameHeader'
 
 export function GameContainer () {
+  const [fieldWidth, setFieldWidth] = useState(32)
+  const [fieldHeight, setFieldHeight] = useState(17)
+  const [mineCount, setMineCount] = useState(170)
+  const [inputFieldError, setInputFieldError] = useState<string | undefined>(undefined)
+
   const [isGenerated, setIsGenerated] = useState(false)
   const [field, setField] = useState(generateEmptyField({
-    width: 32,
-    height: 17
+    width: fieldWidth,
+    height: fieldHeight
   }))
 
   const [timer, setTimer] = useState(0)
@@ -20,11 +26,24 @@ export function GameContainer () {
     setTimer(0)
 
     const nextFieldState = generateEmptyField({
-      width: 32, height: 17
+      width: fieldWidth, height: fieldHeight
     })
     setField(nextFieldState)
     setIsGenerated(false)
     clearTimer()
+  }
+
+  const onRegenerate = (width: number, height: number, mineCount: number) => {
+    if (mineCount > width * height - 1) {
+      setInputFieldError('Too many mines')
+      return
+    }
+
+    setFieldWidth(width)
+    setFieldHeight(height)
+    setMineCount(mineCount)
+    onResetButton()
+    setInputFieldError(undefined)
   }
 
   const clearTimer = () => {
@@ -40,9 +59,9 @@ export function GameContainer () {
 
   const onFirstCellLeftClick = (index: number) => {
     setField(generateFieldWithMines({
-      width: 32,
-      height: 17,
-      mineCount: 17,
+      width: fieldWidth,
+      height: fieldHeight,
+      mineCount: mineCount,
       clickedCellIndex: index
     }))
 
@@ -85,6 +104,13 @@ export function GameContainer () {
         field={field}
         onCellLeftClick={isGenerated ? onCellLeftClick : onFirstCellLeftClick}
         onCellRightClick={onCellRightClick}
+      />
+      <GameFooter
+        width={fieldWidth}
+        height={fieldHeight}
+        mineCount={mineCount}
+        onRegenerate={onRegenerate}
+        inputError={inputFieldError}
       />
     </div>
   )
