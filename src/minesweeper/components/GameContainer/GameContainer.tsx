@@ -42,7 +42,7 @@ export function GameContainer () {
     setField(generateFieldWithMines({
       width: 32,
       height: 17,
-      mineCount: 170,
+      mineCount: 17,
       clickedCellIndex: index
     }))
 
@@ -52,7 +52,7 @@ export function GameContainer () {
   }
 
   const onCellLeftClick = (index: number) => {
-    if (field.winningStatus === 'lost') return
+    if (field.winningStatus !== 'ongoing') return
 
     const nextState = clickCell(field, index)
     setField(nextState)
@@ -66,7 +66,7 @@ export function GameContainer () {
   }
 
   const onCellRightClick = (index: number) => {
-    if (!isGenerated || field.winningStatus === 'lost') return
+    if (!isGenerated || field.winningStatus !== 'ongoing') return
 
     const nextState = markCell(field, index)
     setField(nextState)

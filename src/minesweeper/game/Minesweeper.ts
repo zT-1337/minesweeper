@@ -1,5 +1,5 @@
 import { getRandomInt } from '../../util/random'
-import { Cell, GenerateFieldWithMinesRequest, Field, GenerateEmptyFieldRequest } from './GameTypes'
+import { Cell, GenerateFieldWithMinesRequest, Field, GenerateEmptyFieldRequest, WinningStatus } from './GameTypes'
 
 export function generateEmptyField (request: GenerateEmptyFieldRequest): Field {
   const cellCount = request.width * request.height
@@ -86,13 +86,25 @@ function clickCellWithoutCopying (field: Field, index: number): void {
     return
   }
 
-  if (clickedCell.mineNeighbourCounter !== 0) return
+  if (clickedCell.mineNeighbourCounter === 0) {
+    const neighbours = getNeighbours(field, index)
 
-  const neighbours = getNeighbours(field, index)
-
-  for (const neighbour of neighbours) {
-    clickCellWithoutCopying(field, neighbour.index)
+    for (const neighbour of neighbours) {
+      clickCellWithoutCopying(field, neighbour.index)
+    }
   }
+
+  field.winningStatus = getWinningStatus(field)
+}
+
+function getWinningStatus (field: Field): WinningStatus {
+  if (field.markedCounter !== field.mineCount) return 'ongoing'
+
+  for (const cell of field.cells) {
+    if (!cell.isMine && cell.clickState !== 'clicked') return 'ongoing'
+  }
+
+  return 'won'
 }
 
 export function markCell (field: Field, index: number): Field {
@@ -106,14 +118,18 @@ export function markCell (field: Field, index: number): Field {
 
   markedCell.clickState = wasUnmarked ? 'marked' : 'unclicked'
 
-  return {
+  const nextField: Field = {
     cells: copiedCells,
     width: field.width,
     height: field.height,
     mineCount: field.mineCount,
     markedCounter: wasUnmarked ? field.markedCounter + 1 : field.markedCounter - 1,
-    winningStatus: 'ongoing'
+    winningStatus: field.winningStatus
   }
+
+  nextField.winningStatus = getWinningStatus(nextField)
+
+  return nextField
 }
 
 function copyCells (cells: Cell[]): Cell[] {
